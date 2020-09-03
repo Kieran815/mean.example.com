@@ -85,4 +85,40 @@ router.put('/', function(req, res){
   
 });
 
+// DELETE/DELETE request, Delete User
+router.delete('/:userId', function(req,res){
+
+  var userId = req.params.userId;
+
+  Users.remove({'_id':userId}, function(err,removed){
+
+    if(err){
+      return res.json({success: false, error: err});
+    }
+
+    return res.json({success: true, status: removed});
+
+  });
+
+});
+
+
 module.exports = router;
+
+
+/* CREATE
+curl -d '{"email": "kieran.milligan@gmail.com", "username": "Kieran", "first_name": "Kieran", "last_name": "Milligan"}' -H "Content-Type: application/json" -X POST http://localhost:3000/api/users
+*/
+
+/* READ
+curl -H "Content-Type: application/json" -X GET http://localhost:3000/api/users/5f512cbe79a2984218c76682
+*/
+
+/* UPDATE
+curl -d '{"_id":"5f512cbe79a2984218c76682", "first_name":"Robert"}' -H "Content-Type: application/json" -X PUT http://localhost:3000/api/users
+
+*/
+
+/* DELETE
+curl -H "Content-Type: application/json" -X DELETE http://localhost:3000/api/users/${userID}
+*/
