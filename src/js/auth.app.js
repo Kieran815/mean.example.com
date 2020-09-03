@@ -55,6 +55,7 @@ var authApp = (function() {
   return {
     load: function(){
       loginForm();
+      // request login
       postRequest('loginForm', '/api/auth/login');
     }
   }
