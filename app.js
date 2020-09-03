@@ -53,6 +53,21 @@ app.use(require('express-session')({
 app.use(passport.initialize());
 app.use(passport.session());
 
+// Serialize session data
+passport.serializeUser(function(user, done){
+  done(null,{
+    id: user._id,
+    username: user.username,
+    email: user.email,
+    first_name: user.first_name,
+    last_name: user.last_name
+  });
+});
+
+passport.deserializeUser(function(user, done){
+  done(null, user);
+});
+
 // Routes
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
