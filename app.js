@@ -10,6 +10,9 @@ var session = require('express-session');
 var MongoStore = require('connect-mongo')(session);
 var passport = require('passport');
 
+var LocalStrategy = require('passport-local').Strategy;
+var Users = require('./models/users');
+
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 // import paiUsersRouter
@@ -52,6 +55,8 @@ app.use(require('express-session')({
 }));
 app.use(passport.initialize());
 app.use(passport.session());
+// use strat
+passport.use(Users.createStrategy());
 
 // Serialize session data
 passport.serializeUser(function(user, done){
