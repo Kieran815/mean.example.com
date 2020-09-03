@@ -9,8 +9,8 @@ var mongoose = require('mongoose');
 var session = require('express-session');
 var MongoStore = require('connect-mongo')(session);
 var passport = require('passport');
-
 var LocalStrategy = require('passport-local').Strategy;
+
 var Users = require('./models/users');
 
 var authRouter = require('./routes/auth');

@@ -1,6 +1,5 @@
 var authApp = (function() {
-
-  function loginForm(){
+  function loginForm() {
     let app = document.getElementById('app');
 
     let form =  `
@@ -22,16 +21,43 @@ var authApp = (function() {
         </form>
       </div>
     `;
-
     app.innerHTML=form;
+  }
+
+  function postRequest(formId, url){
+    let form = document.getElementById(formId);
+    form.addEventListener('submit', function(e){
+      e.preventDefault();
+
+      let formData = new FormData(form);
+      let uri = `${window.location.origin}${url}`;
+      let xhr = new XMLHttpRequest();
+      xhr.open('POST', uri);
+
+      xhr.setRequestHeader(
+        'Content-Type',
+        'application/json; charset=UTF-8'
+      );
+
+      let object = {};
+      formData.forEach(function(value, key){
+        object[key]=value;
+      });
+
+      xhr.send(JSON.stringify(object));
+      xhr.onload = function(){
+        let data = JSON.parse(xhr.response);
+        console.log(data);
+      }
+    });
   }
 
   return {
     load: function(){
       loginForm();
+      postRequest('loginForm', '/api/auth/login');
     }
   }
 
 })();
-
 authApp.load();

@@ -36,7 +36,6 @@ router.post('/register', function(req,res,next){
 });
 
 router.post('/login', function(req, res, next) {
-  //
   passport.authenticate('local', function(err, user, info) {
 
     if (err) { 
@@ -52,24 +51,14 @@ router.post('/login', function(req, res, next) {
       if (err) { 
         return res.json({success:false, error: err });
       }
-
-      //we will use a console.log() to test the session data
-      console.log(req.session);
-
       return res.json({success:true, user: user });
 
     });
   })(req, res, next);
 });
 
-router.delete('/logout', function(req, res){
-  req.session.destroy(function (err) {
-    if(err){
-      return res.json({success: 'false'});
-    }else{
-      return res.json({success: 'true'});
-    }
-  });
+router.get('/logout', function(req, res){
+  req.logout();
 });
 
 module.exports = router;
