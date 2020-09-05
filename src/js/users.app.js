@@ -325,7 +325,7 @@ var usersApp = (function() {
       switch(hashArray[0]){
         case '#create':
           createUser();
-          postRequest('createUser', '/api/users', 'POST');
+          processRequest('createUser', '/api/users', 'POST');
           break;
 
         case '#view':
