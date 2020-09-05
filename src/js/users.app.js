@@ -211,7 +211,7 @@ var usersApp = (function() {
       `;
 
       app.innerHTML=form;
-      processRequest('createUser', '/api/users', 'PUT');
+      processRequest('editUser', '/api/users', 'PUT');
     }
   }
 
