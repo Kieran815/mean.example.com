@@ -14,7 +14,6 @@ var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var apiAuthRouter = require('./routes/api/auth');
 var apiUsersRouter = require('./routes/api/users');
-var apiArticlesRouter = require('./routes/api/articles');
 
 
 var app = express();
@@ -86,7 +85,7 @@ app.use(function(req,res,next){
   //exact matches.
   var whitelist = [
     '/',
-    '/auth'
+    '/auth',
   ];
 
   //req.url holds the current URL
@@ -131,7 +130,6 @@ app.use('/users', usersRouter);
 app.use('/api/auth', apiAuthRouter);
 // assign and call `apiUserRouter`
 app.use('/api/users', apiUsersRouter);
-app.use('/api/articles', apiArticlesRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

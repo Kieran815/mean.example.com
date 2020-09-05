@@ -143,6 +143,7 @@ var validate = (function() {
   }
 
 })();
+
 authApp.load();
 
 window.addEventListener("hashchange", function(){
