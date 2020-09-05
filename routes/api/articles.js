@@ -85,6 +85,23 @@ router.put('/', function(req, res){
   
 });
 
+// delete article
+router.delete('/:userId', function(req,res){
+
+  var userId = req.params.userId;
+
+  Users.remove({'_id':userId}, function(err,removed){
+
+    if(err){
+      return res.json({success: false, error: err});
+    }
+
+    return res.json({success: true, status: removed});
+
+  });
+
+});
+
 module.exports = router;
 
 
