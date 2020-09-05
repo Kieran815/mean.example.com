@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 var Articles = require('../../models/articles');
 
+// get all articles
 router.get('/', function(req, res, next) {
   Articles.find({},function(err, articles){
     if(err){
@@ -11,7 +12,63 @@ router.get('/', function(req, res, next) {
   });
 });
 
+// read single article
+router.get('/:articleId', function(req,res){
+  
+  var articleId = req.params.articleId;
+   Articles.findOne({'_id':articleId}, function(err, article){
+     if(err){
+      return res.json({'success':false, 'error': err});
+    }
+     return res.json({'success':true, 'article': article});
+   });
+ });
+
+ // create new article
+router.post('/', function(req, res) {
+  Articles.create(new Articles({
+    articlename: req.body.articlename,
+    email: req.body.email,
+    first_name: req.body.first_name,
+    last_name: req.body.last_name
+  }), function(err, article){
+    
+    if(err){
+      return res.json({success: false, article: req.body, error: err});
+    }
+
+    return res.json({success: true, article: article});
+    
+  });
+});
+
 module.exports = router;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// *** EXTRA LINES FOR TESTING
 
 // curl -H "Content-Type: application/json" -X GET http://localhost:3000/api/articles/
 
