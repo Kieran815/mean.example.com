@@ -8,19 +8,25 @@ var session = require('express-session');
 var MongoStore = require('connect-mongo')(session);
 var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
-var Users = require('./models/users');
-var authRouter = require('./routes/auth');
-var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
-var apiAuthRouter = require('./routes/api/auth');
-var apiUsersRouter = require('./routes/api/users');
 
+var Users = require('./models/users');
+var Articles = require('./models/articles');
+var indexRouter = require('./routes/index');
+var authRouter = require('./routes/auth');
+var usersRouter = require('./routes/users');
+var articlesRouter = require('./routes/articles');
+var apiUsersRouter = require('./routes/api/users');
+var apiArticlesRouter = require('./routes/api/articles');
+var apiAuthRouter = require('./routes/api/auth');
 
 var app = express();
-
 var config = require('./config.dev');
-// create connection to db
+
+//Connect to MongoDB
 mongoose.connect(config.mongodb, { useNewUrlParser: true });
+
+//Test the file
+// console.log(config);
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -32,7 +38,6 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Connect express session packages
 app.use(require('express-session')({
   //Define the session store
   store: new MongoStore({
@@ -52,10 +57,8 @@ app.use(require('express-session')({
 }));
 app.use(passport.initialize());
 app.use(passport.session());
-// use strat
 passport.use(Users.createStrategy());
 
-// Serialize session data
 passport.serializeUser(function(user, done){
   done(null,{
     id: user._id,
@@ -70,22 +73,36 @@ passport.deserializeUser(function(user, done){
   done(null, user);
 });
 
+//Set up CORS
+app.use(function(req, res, next) {
+  res.header('Access-Control-Allow-Credentials', true);
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
+  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, X-HTTP-Method-Override, Content-Type, Accept');
+  if ('OPTIONS' == req.method) {
+    res.send(200);
+  } else {
+    next();
+  }
+});
+
+//Working with Session Data
 app.use(function(req,res,next){
   res.locals.session = req.session;
   next();
 });
-
-//Session based access control
+//Session-based access control
 app.use(function(req,res,next){
   //Uncomment the following line to allow access to everything.
-  //return next();
+  // return next();
 
   //Allow any endpoint that is an exact match. The server does not
-  //have access to the hash so /auth and /auth#xxx would bot be considered
+  //have access to the hash so /auth and /auth#xxx would bot be considered 
   //exact matches.
   var whitelist = [
     '/',
     '/auth',
+    '/articles'
   ];
 
   //req.url holds the current URL
@@ -97,14 +114,15 @@ app.use(function(req,res,next){
     return next();
   }
 
-  //Allow access to dynamic end points
+  //Allow access to dynamic endpoints
   var subs = [
     '/public/',
-    '/api/auth/'
+    '/api/auth/',
+    '/articles'
   ];
 
   //The query string provides a partial URL match beginning
-  //at position 0. Both /api/auth/login and /api/auth/logout would would
+  //at position 0. Both /api/auth/login and /api/auth/logout would would 
   //be considered a match for /api/auth/
   for(var sub of subs){
     if(req.url.substring(0, sub.length)===sub){
@@ -118,18 +136,18 @@ app.use(function(req,res,next){
   }
 
   //There is no session nor are there any whitelist matches. Deny access and
-  //redirect the user to the login screen.
+  //Redirect the user to the login screen.
   return res.redirect('/auth#login');
 });
 
-// Routes
+//Routes
 app.use('/', indexRouter);
 app.use('/auth', authRouter);
 app.use('/users', usersRouter);
-// api auth router
-app.use('/api/auth', apiAuthRouter);
-// assign and call `apiUserRouter`
+app.use('/articles', articlesRouter);
 app.use('/api/users', apiUsersRouter);
+app.use('/api/articles', apiArticlesRouter);
+app.use('/api/auth', apiAuthRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
