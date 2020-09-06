@@ -99,11 +99,13 @@ app.use(function(req,res,next){
   //Allow any endpoint that is an exact match. The server does not
   //have access to the hash so /auth and /auth#xxx would bot be considered 
   //exact matches.
+  /*
   var whitelist = [
     '/',
     '/auth',
     '/articles'
   ];
+  */
 
   //req.url holds the current URL
   //indexOf() returns the index of the matching array element
