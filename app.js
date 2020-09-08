@@ -94,10 +94,10 @@ app.use(function(req,res,next){
 //Session-based access control
 app.use(function(req,res,next){
   //Uncomment the following line to allow access to everything.
-  return next();
+  // return next();
 
   //Allow any endpoint that is an exact match. The server does not
-  //have access to the hash so /auth and /auth#xxx would bot be considered 
+  //have access to the hash so /auth and /auth#xxx would not be considered 
   //exact matches.
   var whitelist = [
     '/',
